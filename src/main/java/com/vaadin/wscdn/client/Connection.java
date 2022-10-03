@@ -119,6 +119,9 @@ public class Connection {
         ZipEntry ze = null;
         while ((ze = zipInputStream.getNextEntry()) != null) {
             final File outfile = new File(targetDirectory, ze.getName());
+            if (!outfile.toPath().normalize().startsWith(targetDirectory.toPath().normalize())) {
+                throw new IOException("Bad zip entry");
+            }
             if (!ze.isDirectory()) {
                 outfile.getParentFile().mkdirs();
                 outfile.createNewFile();
